@@ -1,0 +1,24 @@
+
+
+
+
+
+
+qsub -I -q normal -l ncpus=12,mem=64GB,walltime=3:00:00 -P mi23 -l storage=gdata/jq77+scratch/
+jq77+scratch/mi2
+
+module load python3/3.9.2
+source /scratch/jq77/nk8155/seg1/bin/activate
+cd /scratch/mi23/nuwan/cnn_vsa
+
+pip install matplotlib   # once, for training/robustness PNG curves
+
+python cifar_cnn_rgb.py --data data --epochs 30
+python cifar_cnn_hv.py --data data --encoder linear --D 1024 --epochs 30
+
+
+# outputs: results/rgb/...  and  results/hv/...  (json, csv, png per run)
+# after training: results/.../<run>_feature_maps/ (input, channel grids, encoder_pca_rgb.png for HV)
+# skip maps: --no-feature-maps  |  skip PCA only: --no-feature-map-pca
+# optional: --results-dir /path/to/results
+
